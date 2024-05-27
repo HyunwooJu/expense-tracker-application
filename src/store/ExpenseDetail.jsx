@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { deleteExpense } from "../store/expenseSlice";
+import { deleteExpense } from "./expenseSlice"; // 올바른 경로로 수정
 import styled from "styled-components";
 import { useNavigate, useParams } from "react-router-dom";
 import {

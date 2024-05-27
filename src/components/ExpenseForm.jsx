@@ -1,24 +1,27 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import styled from "styled-components";
-import { ExpenseContext } from "../context/ExpenseContext";
+import { addExpense } from "../store/expenseSlice";
 
 const ExpenseForm = () => {
   const [date, setDate] = useState("");
   const [item, setItem] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
-  const { addExpense } = useContext(ExpenseContext);
+  const dispatch = useDispatch();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!date || !item || !amount || !description) return;
-    addExpense({
-      id: Date.now().toString(),
-      date,
-      item,
-      amount: parseInt(amount, 10),
-      description,
-    });
+    dispatch(
+      addExpense({
+        id: Date.now().toString(),
+        date,
+        item,
+        amount: parseInt(amount, 10),
+        description,
+      })
+    );
     setDate("");
     setItem("");
     setAmount("");

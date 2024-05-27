@@ -1,10 +1,11 @@
-import React, { useContext } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
-import { ExpenseContext } from "../context/ExpenseContext";
+import { useSelector, useDispatch } from "react-redux";
+import { addExpense, setSelectedMonth } from "../store/expenseSlice";
+import ExpenseForm from "../components/ExpenseForm";
 import ExpenseSummary from "../components/ExpenseSummary";
 import MonthSelector from "../components/MonthSelector";
 import ExpenseList from "../components/ExpenseList";
-import ExpenseForm from "../components/ExpenseForm";
 
 const Container = styled.div`
   padding: 20px;
@@ -13,7 +14,17 @@ const Container = styled.div`
 `;
 
 const Home = () => {
-  const { expenses, selectedMonth } = useContext(ExpenseContext);
+  const dispatch = useDispatch();
+  const expenses = useSelector((state) => state.expenses.expenses || []);
+  const selectedMonth = useSelector((state) => state.expenses.selectedMonth);
+
+  const handleAddExpense = (expense) => {
+    dispatch(addExpense(expense));
+  };
+
+  const handleMonthChange = (month) => {
+    dispatch(setSelectedMonth(month));
+  };
 
   const filteredExpenses = expenses.filter(
     (expense) => new Date(expense.date).getMonth() + 1 === selectedMonth
@@ -21,8 +32,11 @@ const Home = () => {
 
   return (
     <Container>
-      <ExpenseForm />
-      <MonthSelector />
+      <ExpenseForm onAddExpense={handleAddExpense} />
+      <MonthSelector
+        selectedMonth={selectedMonth}
+        onMonthChange={handleMonthChange}
+      />
       <ExpenseSummary
         expenses={filteredExpenses}
         selectedMonth={selectedMonth}

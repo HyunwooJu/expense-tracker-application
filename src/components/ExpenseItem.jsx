@@ -14,7 +14,11 @@ const ExpenseItem = ({ expense }) => {
       <Date>{expense.date}</Date>
       <ItemText>{expense.item}</ItemText>
       <Amount>{expense.amount.toLocaleString()}원</Amount>
-      <Description>{expense.description}</Description>
+      <Description>
+        {expense.description.length > 10
+          ? `${expense.description.substring(0, 10)}...`
+          : expense.description}
+      </Description>
     </Item>
   );
 };
@@ -38,9 +42,6 @@ const Date = styled.div`
 
 const ItemText = styled.div`
   flex: 2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const Amount = styled.div`
@@ -51,9 +52,6 @@ const Amount = styled.div`
 const Description = styled.div`
   flex: 3;
   text-align: right;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 export default ExpenseItem;

@@ -22,7 +22,7 @@ const ListItem = styled(Link)`
   }
 `;
 
-const ExpenseList = ({ expenses }) => {
+const ExpenseList = ({ expenses = [] }) => {
   return (
     <ListContainer>
       {expenses.map((expense) => (
