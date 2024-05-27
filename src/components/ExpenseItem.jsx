@@ -38,6 +38,9 @@ const Date = styled.div`
 
 const ItemText = styled.div`
   flex: 2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 const Amount = styled.div`
@@ -48,6 +51,9 @@ const Amount = styled.div`
 const Description = styled.div`
   flex: 3;
   text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export default ExpenseItem;

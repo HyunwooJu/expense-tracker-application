@@ -1,16 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import styled from "styled-components";
+import { ExpenseContext } from "../context/ExpenseContext";
 
-const ExpenseForm = ({ onAddExpense }) => {
+const ExpenseForm = () => {
   const [date, setDate] = useState("");
   const [item, setItem] = useState("");
   const [amount, setAmount] = useState("");
   const [description, setDescription] = useState("");
+  const { addExpense } = useContext(ExpenseContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!date || !item || !amount || !description) return;
-    onAddExpense({ date, item, amount: parseInt(amount, 10), description });
+    addExpense({
+      id: Date.now().toString(),
+      date,
+      item,
+      amount: parseInt(amount, 10),
+      description,
+    });
     setDate("");
     setItem("");
     setAmount("");

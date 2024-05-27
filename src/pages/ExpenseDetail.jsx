@@ -1,10 +1,7 @@
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import {
-  getExpensesFromLocalStorage,
-  saveExpensesToLocalStorage,
-} from "../utils/localStorage";
+import { ExpenseContext } from "../context/ExpenseContext";
 
 const Container = styled.div`
   padding: 20px;
@@ -51,9 +48,9 @@ const BackButton = styled(Button)`
 `;
 
 const ExpenseDetail = () => {
+  const { expenses, setExpenses } = useContext(ExpenseContext);
   const { id } = useParams();
   const navigate = useNavigate();
-  const expenses = getExpensesFromLocalStorage();
   const expense = expenses.find((expense) => expense.id === id);
 
   const dateRef = useRef();
@@ -77,14 +74,14 @@ const ExpenseDetail = () => {
     const updatedExpenses = expenses.map((exp) =>
       exp.id === id ? updatedExpense : exp
     );
-    saveExpensesToLocalStorage(updatedExpenses);
+    setExpenses(updatedExpenses);
     navigate("/");
   };
 
   const handleDelete = () => {
     if (window.confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
       const updatedExpenses = expenses.filter((exp) => exp.id !== id);
-      saveExpensesToLocalStorage(updatedExpenses);
+      setExpenses(updatedExpenses);
       navigate("/");
     }
   };
