@@ -1,12 +1,8 @@
-import React from "react";
-import { useDispatch } from "react-redux";
-import { deleteExpense } from "../store/expenseSlice";
-import styled from "styled-components";
+import React, { useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  getExpensesFromLocalStorage,
-  saveExpensesToLocalStorage,
-} from "../utils/localStorage";
+import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
+import { deleteExpense, updateExpense } from "../store/expenseSlice";
 
 const Container = styled.div`
   padding: 20px;
@@ -56,12 +52,29 @@ const ExpenseDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const expenses = getExpensesFromLocalStorage();
+  const expenses = useSelector((state) => state.expenses.expenses || []);
   const expense = expenses.find((expense) => expense.id === id);
+
+  const dateRef = useRef();
+  const itemRef = useRef();
+  const amountRef = useRef();
+  const descriptionRef = useRef();
 
   if (!expense) {
     return <div>지출 항목을 찾을 수 없습니다.</div>;
   }
+
+  const handleUpdate = () => {
+    const updatedExpense = {
+      ...expense,
+      date: dateRef.current.value,
+      item: itemRef.current.value,
+      amount: parseInt(amountRef.current.value, 10),
+      description: descriptionRef.current.value,
+    };
+    dispatch(updateExpense(updatedExpense));
+    navigate("/");
+  };
 
   const handleDelete = () => {
     if (window.confirm("정말로 이 지출 항목을 삭제하시겠습니까?")) {
@@ -72,12 +85,16 @@ const ExpenseDetail = () => {
 
   return (
     <Container>
-      <Input type="date" defaultValue={expense.date} />
-      <Input type="text" defaultValue={expense.item} />
-      <Input type="number" defaultValue={expense.amount} />
-      <Input type="text" defaultValue={expense.description} />
+      <Input type="date" defaultValue={expense.date} ref={dateRef} />
+      <Input type="text" defaultValue={expense.item} ref={itemRef} />
+      <Input type="number" defaultValue={expense.amount} ref={amountRef} />
+      <Input
+        type="text"
+        defaultValue={expense.description}
+        ref={descriptionRef}
+      />
       <ButtonGroup>
-        <UpdateButton>수정</UpdateButton>
+        <UpdateButton onClick={handleUpdate}>수정</UpdateButton>
         <DeleteButton onClick={handleDelete}>삭제</DeleteButton>
         <BackButton onClick={() => navigate("/")}>뒤로 가기</BackButton>
       </ButtonGroup>

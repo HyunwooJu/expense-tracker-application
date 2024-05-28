@@ -14,11 +14,7 @@ const ExpenseItem = ({ expense }) => {
       <Date>{expense.date}</Date>
       <ItemText>{expense.item}</ItemText>
       <Amount>{expense.amount.toLocaleString()}원</Amount>
-      <Description>
-        {expense.description.length > 10
-          ? `${expense.description.substring(0, 10)}...`
-          : expense.description}
-      </Description>
+      <Description>{expense.description}</Description>
     </Item>
   );
 };
@@ -42,6 +38,10 @@ const Date = styled.div`
 
 const ItemText = styled.div`
   flex: 2;
+  white-space: nowrap; /* 한 줄로 제한 */
+  overflow: hidden; /* 넘친 부분 숨기기 */
+  text-overflow: ellipsis; /* ... 표시 */
+  max-width: 100px; /* 너비 제한 */
 `;
 
 const Amount = styled.div`
@@ -51,7 +51,11 @@ const Amount = styled.div`
 
 const Description = styled.div`
   flex: 3;
+  white-space: nowrap; /* 한 줄로 제한 */
+  overflow: hidden; /* 넘친 부분 숨기기 */
+  text-overflow: ellipsis; /* ... 표시 */
   text-align: right;
+  max-width: 200px; /* 너비 제한 */
 `;
 
 export default ExpenseItem;
