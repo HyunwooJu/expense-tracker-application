@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import {
   getExpensesFromLocalStorage,
   saveExpensesToLocalStorage,
 } from "../utils/localStorage";
+import { updateExpense } from "../store/expenseSlice";
 
 const Container = styled.div`
   padding: 20px;
@@ -33,9 +35,11 @@ const Button = styled.button`
   }
 `;
 
-const ExpenseDetail = () => {
+const Detail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const expenses = useSelector((state) => state.expenses.expenses || []);
   const [expense, setExpense] = useState(null);
   const [date, setDate] = useState("");
   const [item, setItem] = useState("");
@@ -43,7 +47,6 @@ const ExpenseDetail = () => {
   const [description, setDescription] = useState("");
 
   useEffect(() => {
-    const expenses = getExpensesFromLocalStorage();
     const expense = expenses.find((exp) => exp.id === id);
     if (expense) {
       setExpense(expense);
@@ -52,16 +55,17 @@ const ExpenseDetail = () => {
       setAmount(expense.amount);
       setDescription(expense.description);
     }
-  }, [id]);
+  }, [id, expenses]);
 
   const handleSave = () => {
-    const expenses = getExpensesFromLocalStorage();
-    const updatedExpenses = expenses.map((exp) =>
-      exp.id === id
-        ? { ...exp, date, item, amount: parseInt(amount, 10), description }
-        : exp
-    );
-    saveExpensesToLocalStorage(updatedExpenses);
+    const updatedExpense = {
+      ...expense,
+      date,
+      item,
+      amount: parseInt(amount, 10),
+      description,
+    };
+    dispatch(updateExpense(updatedExpense));
     navigate("/");
   };
 
@@ -98,4 +102,4 @@ const ExpenseDetail = () => {
   );
 };
 
-export default ExpenseDetail;
+export default Detail;

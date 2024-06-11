@@ -35,7 +35,7 @@ const ColorBox = styled.div`
   margin-right: 5px;
 `;
 
-const ExpenseSummary = ({ expenses, selectedMonth }) => {
+const ExpenseSummary = ({ expenses = [], selectedMonth }) => {
   const categories = [...new Set(expenses.map((expense) => expense.item))];
   const categoryTotals = categories.map((category) => {
     return expenses
